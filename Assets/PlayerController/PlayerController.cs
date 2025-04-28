@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,12 +15,16 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
-    private void FixedUpdate()
-    {        
+    private void Update()
+    {
         currentInput.x = Input.GetAxis("Horizontal");
         currentInput.y = Input.GetAxis("Vertical");
         currentInput.Normalize();
-        moveDirection = orientation.forward * currentInput.y + currentInput.x * orientation.right;
-        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+        moveDirection = (orientation.forward * currentInput.y + currentInput.x * orientation.right) * moveSpeed;
     }
+    private void FixedUpdate()
+    {
+        rb.AddForce(moveDirection * 1000, ForceMode.Force);
+    }
+
 }

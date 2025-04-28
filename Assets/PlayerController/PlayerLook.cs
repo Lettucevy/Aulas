@@ -3,10 +3,14 @@ using UnityEngine;
 public class PlayerLook : MonoBehaviour
 {
     [Header("Mouse Look")]
-    public float mouseSensitivity = 10f;
+    public float mouseSensitivity = 2f;
 
-    public Transform playerBody;
-    private float xRotation = 0f;
+    public Transform cam;
+    public Transform orientation;
+    private float xRotation;
+    private float yRotation;
+    private float mouseX;
+    private float mouseY;
 
     private void Start()
     {
@@ -15,13 +19,15 @@ public class PlayerLook : MonoBehaviour
     }
     private void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
 
-        xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        xRotation -= mouseY * mouseSensitivity;
+        yRotation += mouseX * mouseSensitivity;
+
+        cam.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        orientation.transform.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 }
